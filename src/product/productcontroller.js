@@ -5,7 +5,7 @@ const express = require("express");
 
 const router = express.Router();
 const prisma = require("../db");
-const {getAllProducts,getById} = require ("./productservice");
+const {getAllProducts,getById,createProduct} = require ("./productservice");
 
 router.get("/", async (req, res) => {
    const products = await getAllProducts();
@@ -23,26 +23,27 @@ router.get("/:id", async (req,res) => {
         data: productData,
         message: "Successfully retrieved product"
     });
-    console.log("Product Not Found",productData);
+    console.log("Product Not Found");
 })
   
 router.post('/', async (req, res) => {
-    const newProdactData = req.body;
-    const product = await prisma.product.create({
-        data: {
-            name: newProdactData.name,
-            imageUrl: newProdactData.imageUrl,
-            description: newProdactData.description,
-            price: newProdactData.price
-        }
-      })
-    res.status(200).send({
-        data: product,
-        message:"Successfully added new product"
-    });
+    console.log("Body",req.body);
+    try {
+        const ProductData = req.body;
+        const product = await createProduct(ProductData);
+        res.status(200).send ({
+            data: product,
+            message: "Successfully created product"
+        });
+    } catch (error) {
+        res.status(400).send ({
+            message: ('Failed to create product')
+        });
+        
+    }
 });
   
-  router.delete('/:id', async (req,res) => {
+router.delete('/:id', async (req,res) => {
       const productId = req.params.id;
       await prisma.product.delete ({
           where: {
