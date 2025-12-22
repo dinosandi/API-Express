@@ -1,23 +1,18 @@
-// layaer untuk sebuah logic 
+// service layer bertujuan untuk handle bussiness logic
+// kenapa di pisah? karena memiliki tangguang jawab yang berbeda
+// reusability, maintainability, testability
 
 const prisma = require("../db");
+const { findProducts, findProductsById } = require("./productrepository");
+
 
 const getAllProducts = async () => {
-    const products = await prisma.product.findMany();
+    const products = await findProducts();
     return products;
 }
 const getById = async (id) => {
-
-    if(!id){
-        throw new Error ("Product ID is required");
-    }
-    const productId = await prisma.product.findUnique({
-        where: {
-            id: id
-        }
-    });
+    const productId = await findProductsById(id);
     return productId;
-    
 }
 
 const createProduct = async (newProdactData) => {

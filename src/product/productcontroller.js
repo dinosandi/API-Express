@@ -2,7 +2,6 @@
 // dan juga handel sebuah validasi 
 
 const express = require("express");
-
 const router = express.Router();
 const prisma = require("../db");
 const {getAllProducts,getById,createProduct,deletedProduct,patchProductById} = require ("./productservice");
@@ -23,7 +22,6 @@ router.get("/:id", async (req,res) => {
         data: productData,
         message: "Successfully retrieved product"
     });
-    console.log("Product Not Found");
 })
   
 router.post('/', async (req, res) => {
