@@ -3,7 +3,7 @@
 // reusability, maintainability, testability
 
 const prisma = require("../db");
-const { findProducts, findProductsById, insertProduct, deletedProduct } = require("./productrepository");
+const { findProducts, findProductsById, insertProduct, deletedProduct, editProduct } = require("./productrepository");
 
 
 const getAllProducts = async () => {
@@ -25,26 +25,10 @@ const deletedProductById = async (id) => {
     await deletedProduct(id);
 };
 
-const patchProductById = async (id, updateData) => {
-
+const editProductById = async (id, updateData) => {
     await getById(id);
-
-    const productId = await prisma.product.findUnique({
-        where: {id},
-    });
-    if (!productId) {
-        throw new Error("Product not found");
-    }
-   const productUpdate = await prisma.product.update({
-    where: {id},
-    data: {
-        name: updateData.name,
-        imageUrl: updateData.imageUrl,
-        description: updateData.description,
-        price: updateData.price
-    }
-   });
-    return productUpdate;
+    const product = await editProduct(id,updateData);
+    return product; 
 }
 
 module.exports = {
@@ -52,5 +36,5 @@ module.exports = {
     getById,
     createProduct,
     deletedProductById,
-    patchProductById,
+    editProductById,
 }

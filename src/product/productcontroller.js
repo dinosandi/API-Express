@@ -4,7 +4,7 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../db");
-const {getAllProducts,getById,createProduct,deletedProductById,patchProductById} = require ("./productservice");
+const {getAllProducts,getById,createProduct,deletedProductById,editProductById} = require ("./productservice");
 
 router.get("/", async (req, res) => {
    const products = await getAllProducts();
@@ -77,7 +77,7 @@ router.delete('/:id', async (req,res) => {
     try {
         const productId = req.params.id;
         const updateProductData = req.body;
-        const updateProduct = await patchProductById(productId, updateProductData);
+        const updateProduct = await editProductById(productId, updateProductData);
         res.status(200).json({
             data: updateProduct,
             message: "Successfully updated product",
@@ -99,7 +99,7 @@ router.put('/:id', async (req,res) => {
             message: ('Failed to update product')
         });
     }
-    const product =  await patchProductById(productId, productData);
+    const product =  await editProductById(productId, productData);
     res.status(200).send ({
         data: product,
         message: "Successfully updated product"
