@@ -5,7 +5,7 @@ const express = require("express");
 
 const router = express.Router();
 const prisma = require("../db");
-const {getAllProducts,getById,createProduct} = require ("./productservice");
+const {getAllProducts,getById,createProduct,deletedProduct,patchProductById} = require ("./productservice");
 
 router.get("/", async (req, res) => {
    const products = await getAllProducts();
@@ -44,36 +44,54 @@ router.post('/', async (req, res) => {
 });
   
 router.delete('/:id', async (req,res) => {
-      const productId = req.params.id;
-      await prisma.product.delete ({
-          where: {
-              id: productId
-          }
-      });
-      res.status(200).send ({
-          message: "Successfully deleted product"
-      });
-      console.log("Successfully deleted product");
+    try {
+        const productId = req.params.id;
+        const deleteProduct = await deletedProduct (productId);
+        res.status(200).send ({
+            data: deleteProduct,
+            message: "Successfully deleted product"
+        })
+        
+    } catch (error) {
+        res.status(400).send ({
+            message: ('Failed to delete product')
+        });
+        
+    }
   });
   
-  router.put('/:id', async (req,res) => {
-      const editProductId = req.params.id;
-      const productData = req.body;
-      const updateProduct = await prisma.product.update ({
-          where: {
-              id: editProductId
-          },
-          data: {
-              name: productData.name,
-              imageUrl: productData.imageUrl,
-              description: productData.description,
-              price: productData.price
-          }
-      })
-      res.status(200).send ({
-          data: updateProduct,
-          message: "Successfully updated product"
-      })
+  router.patch('/:id', async (req,res) => {
+    try {
+        const productId = req.params.id;
+        const updateProductData = req.body;
+        const updateProduct = await patchProductById(productId, updateProductData);
+        res.status(200).json({
+            data: updateProduct,
+            message: "Successfully updated product",
+          });
+    } catch (error) {
+        res.status(404).send(error.message);
+    }
   })
+router.put('/:id', async (req,res) => {
+    const productId = req.params.id;
+    const productData = req.body;
+    if(!(
+        productData.name &&
+        productData.imageUrl &&
+        productData.description &&
+        productData.price
+    )){
+        return res.status(400).send ({
+            message: ('Failed to update product')
+        });
+    }
+    const product =  await patchProductById(productId, productData);
+    res.status(200).send ({
+        data: product,
+        message: "Successfully updated product"
+    });
+  });
+
 module.exports = router;
   
