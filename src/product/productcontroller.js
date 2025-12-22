@@ -4,7 +4,7 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../db");
-const {getAllProducts,getById,createProduct,deletedProduct,patchProductById} = require ("./productservice");
+const {getAllProducts,getById,createProduct,deletedProductById,patchProductById} = require ("./productservice");
 
 router.get("/", async (req, res) => {
    const products = await getAllProducts();
@@ -25,36 +25,51 @@ router.get("/:id", async (req,res) => {
 })
   
 router.post('/', async (req, res) => {
-    console.log("Body",req.body);
     try {
-        const ProductData = req.body;
-        const product = await createProduct(ProductData);
-        res.status(200).send ({
+        const { name, imageUrl, description, price } = req.body;
+        const priceNumber = Number(price);
+
+        // VALIDASI SEMUA FIELD WAJIB DIISI
+        if (
+            !name ||
+            !imageUrl ||
+            !description ||
+            isNaN(priceNumber)
+          ) {
+            return res.status(400).json({
+              message: "Invalid input data"
+            });
+          }          
+
+        const product = await createProduct(req.body);
+
+        res.status(201).json({
             data: product,
             message: "Successfully created product"
         });
+
     } catch (error) {
-        res.status(400).send ({
-            message: ('Failed to create product')
+        res.status(500).json({
+            message: "Failed to create product",
+            error: error.message
         });
-        
     }
 });
+
   
 router.delete('/:id', async (req,res) => {
     try {
         const productId = req.params.id;
-        const deleteProduct = await deletedProduct (productId);
+        const deleteProduct = await deletedProductById (productId);
         res.status(200).send ({
-            data: deleteProduct,
             message: "Successfully deleted product"
         })
+        return deleteProduct;
         
     } catch (error) {
-        res.status(400).send ({
-            message: ('Failed to delete product')
+        res.status(404).json ({
+            message: ('Product not found')
         });
-        
     }
   });
   

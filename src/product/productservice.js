@@ -3,7 +3,7 @@
 // reusability, maintainability, testability
 
 const prisma = require("../db");
-const { findProducts, findProductsById } = require("./productrepository");
+const { findProducts, findProductsById, insertProduct, deletedProduct } = require("./productrepository");
 
 
 const getAllProducts = async () => {
@@ -16,28 +16,13 @@ const getById = async (id) => {
 }
 
 const createProduct = async (newProdactData) => {
-    const product = await prisma.product.create({
-        data: {
-            name: newProdactData.name,
-            imageUrl: newProdactData.imageUrl,
-            description: newProdactData.description,
-            price: newProdactData.price
-        }
-      })
-   return product;
+    const product = await insertProduct(newProdactData);
+    return product;
 }
 
-const deletedProduct = async (id) => {
-    try {
-        const product = await prisma.product.delete({
-            where: {
-                id: id,
-            }
-        });
-        
-    } catch (error) {
-        throw error("Failed to delete product: " + error.message);
-    }
+const deletedProductById = async (id) => {
+  const productId = await deletedProduct(id);
+  return productId
 };
 
 const patchProductById = async (id, updateData) => {
@@ -66,6 +51,6 @@ module.exports = {
     getAllProducts,
     getById,
     createProduct,
-    deletedProduct,
+    deletedProductById,
     patchProductById,
 }

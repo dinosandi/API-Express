@@ -18,7 +18,29 @@ const findProductsById = async (id) => {
     return product;
 }
 
-module.exports = {
+const insertProduct = async (newProdactData) => {
+    const product = await prisma.product.create({
+        data: {
+            name: newProdactData.name,
+            imageUrl: newProdactData.imageUrl,
+            description: newProdactData.description,
+            price: newProdactData.price
+        }
+    });
+    return product;
+}
+const deletedProduct = async (id) => {
+    const product = await prisma.product.delete({
+        where: {
+            id: id,
+        }
+    });
+    return product
+}
+
+module.exports =    {
     findProducts,
     findProductsById,
+    insertProduct,
+    deletedProduct,
 }
