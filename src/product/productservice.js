@@ -21,8 +21,8 @@ const createProduct = async (newProdactData) => {
 }
 
 const deletedProductById = async (id) => {
-  const productId = await deletedProduct(id);
-  return productId
+    await getById(id);
+    await deletedProduct(id);
 };
 
 const patchProductById = async (id, updateData) => {
