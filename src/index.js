@@ -17,6 +17,9 @@ app.get("/api", (req, res) => {
 const productController = require("./product/ProductController");
 app.use("/products", productController);
 
+const loginController = require("./auth/logincontroller");
+app.use("/auth", loginController);
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });

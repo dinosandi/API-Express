@@ -2,7 +2,6 @@
 // kenapa di pisah? karena memiliki tangguang jawab yang berbeda
 // reusability, maintainability, testability
 
-const prisma = require("../db");
 const { findProducts, findProductsById, insertProduct, deletedProduct, editProduct } = require("./productrepository");
 
 
