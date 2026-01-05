@@ -1,9 +1,9 @@
 const prisma = require("../db");
 
-const PostLogin = async (id) => {
+const PostLogin = async (email) => {
     const Login = await prisma.user.findUnique({
         where: {
-            id
+            email
         }
     })
     return Login;
