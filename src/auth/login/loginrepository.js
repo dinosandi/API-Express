@@ -1,4 +1,4 @@
-const prisma = require("../db");
+const prisma = require("../../db");
 
 const PostLogin = async (email) => {
     const Login = await prisma.user.findUnique({

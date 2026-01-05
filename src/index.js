@@ -17,8 +17,11 @@ app.get("/api", (req, res) => {
 const productController = require("./product/ProductController");
 app.use("/products", productController);
 
-const loginController = require("./auth/logincontroller");
+const loginController = require("./auth/login/logincontroller");
 app.use("/auth", loginController);
+
+const registerController = require("./auth/register/registercontroller");
+app.use("/auth", registerController);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
