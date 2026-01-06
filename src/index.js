@@ -23,6 +23,9 @@ app.use("/auth", loginController);
 const registerController = require("./auth/register/registercontroller");
 app.use("/auth", registerController);
 
+const useGetUserController = require ("./auth/useGetUser/useGetUserController");
+app.use("/auth", useGetUserController);
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
