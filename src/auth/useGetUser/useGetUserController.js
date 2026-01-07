@@ -10,15 +10,41 @@ router.get("/users", async (req,res) => {
     })
 })
 
-router.get("/users/:id", async (req,res) => {
-    const userId = req.params.id;
-    const userData = await getUserById(userId);
-    res.status(200).send({
-        data: userData,
-        message: "Successfully retrieved user"
-    })
-    re
-})
+router.get("/users/:id", async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const userData = await getUserById(userId);
+  
+      if (!userData) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found"
+        });
+      }
+  
+      const responseData = {
+        id: userData.id,
+        username: userData.username,
+        email: userData.email,
+        noHp: userData.noHp,
+        role: userData.role
+      };
+  
+      return res.status(200).json({
+        success: true,
+        message: "User retrieved successfully",
+        data: responseData
+      });
+  
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    }
+  });
+  
+  
 
 module.exports = router;
 

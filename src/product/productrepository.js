@@ -13,6 +13,9 @@ const findProductsById = async (id) => {
     const product = await prisma.product.findUnique({
         where:{
             id: id,
+        },
+        include: {
+            products: true,
         }
     })
     return product;
@@ -21,6 +24,7 @@ const findProductsById = async (id) => {
 const insertProduct = async (newProdactData) => {
     const product = await prisma.product.create({
         data: {
+            categoryId: newProdactData.categoryId,
             name: newProdactData.name,
             imageUrl: newProdactData.imageUrl,
             description: newProdactData.description,

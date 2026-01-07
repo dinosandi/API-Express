@@ -17,6 +17,8 @@ model Product {
   description String?
   imageUrl    String?
   price       Int
+  categoryId String?
+  category Category? @relation(fields: [categoryId], references: [id])
 }
 enum Role {
   admin 
@@ -30,5 +32,10 @@ model User {
   password String
 
   role     Role     @default(user)
+}
+model Category {
+  id    String  @id @default(cuid())
+  name  String
+  products Product[]
 }
 
